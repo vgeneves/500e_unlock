@@ -1,0 +1,9 @@
+# b500e board
+
+
+if BOARD_B500E
+
+config BOARD
+	default "b500e"
+
+endif # BOARD_B500E
