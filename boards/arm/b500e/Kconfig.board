@@ -5,4 +5,4 @@
 
 config BOARD_B500E
 	bool "500E signal conditioning board"
-	depends on SOC_STM32F031X6
+	depends on SOC_STM32C031XX

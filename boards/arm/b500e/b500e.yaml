@@ -1,18 +1,15 @@
 identifier: b500e
-name: b500e (fake C031F6P6)
+name: b500e STM32C031F6P6
 type: mcu
 arch: arm
 toolchain:
   - zephyr
   - gnuarmemb
   - xtools
-ram: 4
-flash: 32
 supported:
-  - i2c
-  - spi
   - gpio
-testing:
-  ignore_tags:
-    - net
-    - bluetooth
+  - counter
+  - watchdog
+  - pwm
+ram: 12
+flash: 32
