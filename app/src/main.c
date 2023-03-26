@@ -5,8 +5,6 @@ LOG_MODULE_REGISTER(main, CONFIG_APP_LOG_LEVEL);
 
 void main(void)
 {
-	int ret;
-	const struct device *sensor;
 
 	LOG_INF("500e speed unlock");
 
