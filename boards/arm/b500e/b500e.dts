@@ -54,4 +54,14 @@
 		pinctrl-names = "default";
 		status = "okay";
 	};
+	pwm2: pwm {
+		pinctrl-0 = <&tim1_ch2_pa1>;
+		pinctrl-names = "default";
+		status = "okay";
+	};
+	pwm2: pwm {
+		pinctrl-0 = <&tim1_ch3_pa2>;
+		pinctrl-names = "default";
+		status = "okay";
+	};
 };
