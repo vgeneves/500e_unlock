@@ -1,0 +1,21 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "500e Debug",
+            "cwd": "${workspaceFolder}",
+            "executable": "./build/zephyr/zephyr.elf",
+            "request": "attach",
+            "type": "cortex-debug",
+            // "runToEntryPoint": "main",
+            "servertype": "external",
+            "toolchainPrefix": "arm-zephyr-eabi",
+            "armToolchainPath": "/home/vinzoo/.local/zephyr-sdk-0.15.2/arm-zephyr-eabi/bin/",
+            "gdbTarget": "localhost:3333",
+            "breakAfterReset": true,
+        }
+    ]
+}
