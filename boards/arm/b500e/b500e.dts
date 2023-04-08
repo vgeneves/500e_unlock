@@ -20,10 +20,6 @@
 	};
 };
 
-&clk_lse {
-	status = "okay";
-};
-
 &clk_hsi {
 	status = "okay";
 };
