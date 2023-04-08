@@ -42,21 +42,29 @@
 	status = "disabled";
 };
 
+&tim1_ch1_pa0 {
+	drive-open-drain;
+};
+
+&tim1_ch3_pa2 {
+	drive-open-drain;
+};
+
 &timers1 {
-	st,prescaler = <10000>;
+	st,prescaler = <1024>;
 	status = "okay";
 
-	pwm1: pwm {
+	out: pwm { /* IN_MOTOR on schematics */
 		pinctrl-0 = <&tim1_ch1_pa0>;
 		pinctrl-names = "default";
 		status = "okay";
 	};
-	pwm2: pwm {
+	in: pwm { /* OUT_CTRL on schematics */
 		pinctrl-0 = <&tim1_ch2_pa1>;
 		pinctrl-names = "default";
 		status = "okay";
 	};
-	pwm2: pwm {
+	test: pwm { /* TEST */
 		pinctrl-0 = <&tim1_ch3_pa2>;
 		pinctrl-names = "default";
 		status = "okay";
