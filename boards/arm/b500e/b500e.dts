@@ -58,22 +58,40 @@
 };
 
 &timers1 {
-	st,prescaler = <1024>;
+	st,prescaler = <10000>;
 	status = "okay";
 
-	out: pwm { /* IN_MOTOR on schematics */
-		pinctrl-0 = <&tim1_ch1_pa0>;
-		pinctrl-names = "default";
+	/* TEST */
+	pwmTEST: pwm {
 		status = "okay";
-	};
-	in: pwm { /* OUT_CTRL on schematics */
-		pinctrl-0 = <&tim1_ch2_pa1>;
-		pinctrl-names = "default";
-		status = "okay";
-	};
-	test: pwm { /* TEST */
 		pinctrl-0 = <&tim1_ch3_pa2>;
 		pinctrl-names = "default";
-		status = "okay";
 	};
 };
+
+&timers16 {
+	st,prescaler = <10000>;
+	status = "okay";
+
+	/* IN_MOTOR on schematics */
+	pwmOUT: pwm {
+		status = "okay";
+		pinctrl-0 = <&tim16_ch1_pa0>;
+		pinctrl-names = "default";
+	};
+};
+
+&timers17 {
+	st,prescaler = <2048>;
+	status = "okay";
+	
+	/* OUT_CTRL on schematics */
+	pwmIN: ic {
+		compatible = "st,stm32-ic";
+		status = "okay";
+		#pwm-cells = <3>;
+		pinctrl-0 = <&tim17_ch1_pa1>;
+		pinctrl-names = "default";
+	};
+};
+
