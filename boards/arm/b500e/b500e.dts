@@ -18,6 +18,13 @@
 		zephyr,sram = &sram0;
 		zephyr,flash = &flash0;
 	};
+
+	app_pwm_ios_0 {
+		compatible = "app-pwm-ios";
+		pwms = <&pwmIN 1 0 PWM_POLARITY_NORMAL>, //IN
+			<&pwmOUT 1 0 PWM_POLARITY_NORMAL>, //OUT
+			<&pwmTEST 3 0 PWM_POLARITY_NORMAL>; //TEST
+	};
 };
 
 &clk_hsi {
