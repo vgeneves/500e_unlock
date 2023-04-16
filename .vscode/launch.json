@@ -16,6 +16,7 @@
             "armToolchainPath": "/home/vinzoo/.local/zephyr-sdk-0.15.2/arm-zephyr-eabi/bin/",
             "gdbTarget": "localhost:3333",
             "breakAfterReset": true,
+            "svdFile": "/home/vinzoo/tools/STM32Cube/SVD/STM32G031.svd"
         }
     ]
 }
