@@ -1,0 +1,23 @@
+menu "500e app menuconfig"
+
+choice
+	prompt "500e unlock mode"
+	default 500E_MODE_RUN
+	help
+	  Choose between development and run mode.
+
+config 500E_MODE_RUN
+	bool "Run mode"
+
+config 500E_MODE_DEV
+	bool "Development mode"
+
+endchoice
+
+module = APP
+module-str = APP
+source "subsys/logging/Kconfig.template.log_config"
+
+endmenu
+
+source "Kconfig.zephyr"

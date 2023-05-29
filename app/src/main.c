@@ -4,13 +4,17 @@
 #include <zephyr/drivers/pwm.h>
 #include <drivers/ic.h>
 
-#include <zephyr/logging/log.h>
-LOG_MODULE_REGISTER(main, CONFIG_APP_LOG_LEVEL);
 
-
+/* IOs configuration. */
+#if defined(CONFIG_500E_MODE_DEV)
 #define IC_IN_IDX 0
-#define PWM_OUT_IDX 1
-#define PWM_TEST_IDX 2
+#elif defined(CONFIG_500E_MODE_RUN)
+#define IC_IN_IDX 1
+#else
+#error Select between RUN & DEV
+#endif
+#define PWM_OUT_IDX 2
+#define PWM_TEST_IDX 3
 
 #define PWM_NODE DT_INST(0, app_pwm_ios)
 
@@ -28,12 +32,18 @@ LOG_MODULE_REGISTER(main, CONFIG_APP_LOG_LEVEL);
 #define PWM_OUT_FLAGS \
 	DT_PWMS_FLAGS_BY_IDX(PWM_NODE, PWM_OUT_IDX)
 
+#if defined(CONFIG_500E_MODE_DEV)
+#define drv_(func) ic_##func
+
 #define PWM_TEST_CTLR \
 	DT_PWMS_CTLR_BY_IDX(PWM_NODE, PWM_TEST_IDX)
 #define PWM_TEST_CHANNEL \
 	DT_PWMS_CHANNEL_BY_IDX(PWM_NODE, PWM_TEST_IDX)
 #define PWM_TEST_FLAGS \
 	DT_PWMS_FLAGS_BY_IDX(PWM_NODE, PWM_TEST_IDX)
+#else
+#define drv_(func) pwm_##func
+#endif
 
 struct test_pwm {
 	const struct device *dev;
@@ -48,30 +58,37 @@ static void continuous_capture_callback(const struct device *dev,
 					int status,
 					void *user_data)
 {
-	uint64_t period;
+	uint64_t period = 0;
+	uint64_t pulse = 0;
 	struct test_pwm out;
 
 	out.dev = DEVICE_DT_GET(PWM_OUT_CTLR);
 	out.pwm = PWM_OUT_CHANNEL;
 	out.flags = PWM_OUT_FLAGS;
 
-	ic_cycles_to_usec(dev, pwm, period_cycles, &period);
+	drv_(cycles_to_usec)(dev, pwm, period_cycles, &period);
+#if defined(CONFIG_500E_MODE_DEV)
+	pulse_cycles = 3 * period_cycles / 4;
+#endif
+	drv_(cycles_to_usec)(dev, pwm, pulse_cycles, &pulse);
 
 	if (status == 0) {
 		printk("%d/%d \n",period_cycles, (uint32_t)period / 1000);
-		pwm_set(out.dev, out.pwm, PWM_MSEC(period/1000), PWM_MSEC((3 * period) / 4000), 0);
+		pwm_set(out.dev, out.pwm, PWM_MSEC(period/1000), PWM_MSEC(pulse), 0);
 	} else {
 		printk("Overflow (%d) \n", status);
 		pwm_set(out.dev, out.pwm, PWM_MSEC(0), PWM_MSEC(0), 0);
 	}
-	
 }
 
 void main(void)
 {
-	struct test_pwm in, out, test;
+	struct test_pwm in, out;
+#if defined(CONFIG_500E_MODE_DEV)
+	struct test_pwm test
+#endif
 
-	LOG_INF("500e speed unlock");
+	printk("500e speed unlock");
 
 	in.dev = DEVICE_DT_GET(IC_IN_CTLR);
 	in.pwm = IC_IN_CHANNEL;
@@ -89,6 +106,7 @@ void main(void)
 		return;
 	}
 
+#if defined(CONFIG_500E_MODE_DEV)
 	test.dev = DEVICE_DT_GET(PWM_TEST_CTLR);
 	test.pwm = PWM_TEST_CHANNEL;
 	test.flags = PWM_TEST_FLAGS;
@@ -101,17 +119,19 @@ void main(void)
 			printk("Fail to set the period and pulse width\n");
 			return;
 	}
+#endif
 
-	if(ic_configure_capture(in.dev, in.pwm, IC_CAPTURE_MODE_CONTINUOUS |
+	if(drv_(configure_capture)(in.dev, in.pwm, IC_CAPTURE_MODE_CONTINUOUS |
 					    IC_CAPTURE_TYPE_PERIOD | PWM_POLARITY_NORMAL,
 					    continuous_capture_callback, NULL))
 		printk("Failed to configure capture");
 
 	printk("PWM DONE\n");
-	ic_enable_capture(in.dev, in.pwm);
+	drv_(enable_capture)(in.dev, in.pwm);
 	while (1) {
+#if defined(CONFIG_500E_MODE_DEV)
 		static int i = 0;
-
+		
 		i++;
 		if (i > 300)
 			i = 0;
@@ -120,6 +140,7 @@ void main(void)
 
 		printk("Set %d msec\n", 4*i);
 		k_sleep(K_MSEC(1000));
+#endif
 	}
 }
 

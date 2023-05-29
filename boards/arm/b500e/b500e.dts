@@ -21,7 +21,8 @@
 
 	app_pwm_ios_0 {
 		compatible = "app-pwm-ios";
-		pwms = <&pwmIN 1 0 PWM_POLARITY_NORMAL>, //IN
+		pwms = <&pwmIN_dev 1 0 PWM_POLARITY_NORMAL>, //IN
+			<&pwmIN_run 2 0 PWM_POLARITY_NORMAL>, //IN
 			<&pwmOUT 1 0 PWM_POLARITY_NORMAL>, //OUT
 			<&pwmTEST 3 0 PWM_POLARITY_NORMAL>; //TEST
 	};
@@ -61,6 +62,13 @@
 	st,prescaler = <10000>;
 	status = "okay";
 
+	/* OUT_CTRL on schematics */
+	pwmIN_run: pwm {
+		status = "okay";
+		pinctrl-0 = <&tim1_ch2_pa1>;
+		pinctrl-names = "default";
+	};
+	
 	/* TEST */
 	pwmTEST: pwm {
 		status = "okay";
@@ -86,7 +94,7 @@
 	status = "okay";
 	
 	/* OUT_CTRL on schematics */
-	pwmIN: ic {
+	pwmIN_dev: ic {
 		compatible = "st,stm32-ic";
 		status = "okay";
 		#pwm-cells = <3>;
