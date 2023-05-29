@@ -72,6 +72,10 @@ static void continuous_capture_callback(const struct device *dev,
 #endif
 	drv_(cycles_to_usec)(dev, pwm, pulse_cycles, &pulse);
 
+	/* Divide speed by 2. */
+	period = period * 2;
+	pulse = pulse * 2;
+
 	if (status == 0) {
 		printk("%d/%d \n",period_cycles, (uint32_t)period / 1000);
 		pwm_set(out.dev, out.pwm, PWM_MSEC(period/1000), PWM_MSEC(pulse), 0);
